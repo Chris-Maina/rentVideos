@@ -6,7 +6,6 @@ const videoSchema = new Schema({
   modifiedAt: Date,
   name: { 
     type: String,
-    default: '',
     required: true,
     minlength: 3,
   },
@@ -16,7 +15,6 @@ const videoSchema = new Schema({
   },
   slug: {
     type: String,
-    default:'',
     required: true,
     unique: true,
     lowercase: true,

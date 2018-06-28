@@ -17,6 +17,7 @@ mongoose.connect(db.url);
 
 
 // registering all routes
-require('./app/routes')(app);
+const router  = require('./app/routes');
+app.use('/api', router);
 
 app.listen(port, () => console.log(`Listening on port ${port}...`));
