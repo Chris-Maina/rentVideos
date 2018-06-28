@@ -17,8 +17,9 @@
   },
   "homepage": "https://github.com/Chris-Maina/rentVideos#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
-    "joi": "^13.4.0"
+    "mongoose": "^5.1.5"
   }
 }
