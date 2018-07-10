@@ -6,6 +6,6 @@ const directorSchema = new Schema({
   lastName: { type:String, required: true },
 });
 
-directorSchema.virtual('fullName').get(() => (this.firstName+ ','+ this.lastName));
+directorSchema.virtual('fullName').get(() => (this.firstName+ ' '+ this.lastName));
 
 module.exports = mongoose.model('Director', directorSchema);

@@ -12,8 +12,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
 // config
-const db = require('./config/db');
-mongoose.connect(db.url);
+const config = require('./config/config');
+mongoose.connect(config.url);
 
 
 // registering all routes
