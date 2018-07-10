@@ -16,3 +16,14 @@ Clone this repository
 
 #### Running the application
         npm start
+
+#### Endpoints
+
+| Resource URI                     |   Methods     |  Description                                                         |
+|----------------------------------|---------------|----------------------------------------------------------------------|
+|  /catalog                        |   GET         |  Lists the all the resources                                         |
+|  /catalog/<resource>             |   GET         |  Lists all videos, video instances, genres or director               |
+|  /catalog/<resource>/<id>        |   GET         |  Details page for a specific video, video instance, genre or director|
+|  /catalog/<resource>/create      |   POST        |  Creates a new video, video instance, genre or director              |
+|  /catalog/<resource>/<id>/update |   PATCH/PUT   |  Updates a specific video, video instance, genre or director         |
+|  /catalog/<resource>/<id>/delete |   DELETE      |  Deletes a specific video, video instance, genre or director         |
