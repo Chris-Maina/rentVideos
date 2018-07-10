@@ -2,9 +2,13 @@ if (process.env.NODE_ENV !== 'production') require('dotenv').load();
 const mongoose = require('mongoose'); 
 const express = require('express');
 const bodyParser =require('body-parser');
+var morgan = require('morgan');
 const app = express();
 
-const port = process.env.PORT;
+const port = process.env.PORT || 5000;
+
+// log requests to the console
+app.use(morgan('dev'));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))

@@ -4,25 +4,33 @@ const jwt = require('jsonwebtoken');
 const User = require('./../models/User');
 const config = require('../../config/config');
 
-router.post('/register', (res, req) => {
+exports.userExists = (req, res, next) => {
+  User.findOne({ where: { email: req.body.email } }).then((user) => {
+    if (!user) return next();
+    res.status(409).json({
+      status: 'failure',
+      message: `${user.username} already exists. Use another name`
+    });
+  });
+};
+
+exports.registerUser = (req, res) => {
   const { username, email, password } = req.body;
-  // hash password
-  const hashedPassword;
-  byrpt.hash(password).then( (hash) =>{ hashedPassword = hash} );
+  // // hash password
+  const hashedPassword = '';
+  byrpt.hash(password).then(hash => hashedPassword = hash);
   User.create({
     username,
     email,
-    password: hashedPassword,
-  }, (err) => {
-    if (err) res.json({
-      status: res.statusCode,
-      message: err.message,
-    })
-    res.json({ status: res.statusCode, message: 'You are successfully registered'});
-  });
-});
+    password: hashedPassword
+  }).then(user =>
+    res.status(201).json({ status: 'success', message: `${user.username} is successfully registered` })
+  ).catch(() =>
+    res.status(500).json({ status: 'failure', message: 'An error occured while registering you' })
+  );
+};
 
-router.post('/login', (req, res) => {
+exports.loginUser = (req, res) => {
   const { username, password } = req.body;
   /**
    * find user with the username
@@ -35,7 +43,7 @@ router.post('/login', (req, res) => {
       message: err.message
     })
 
-    if(!user) res.json({
+    if (!user) res.json({
       status: 404,
       message: 'The user does not seem to exist'
     })
@@ -43,16 +51,16 @@ router.post('/login', (req, res) => {
     // compare passwords
     const passwordIsValid = byrpt.compare(password, user.password);
     if (!passwordIsValid) res.json({
-      status: 400,
+      status: 401,
       message: 'Password mismatch'
     })
-  
+
     // sign the token that expires in 24 hours
-    const token = jwt.sign({email: user.email}, config.secret, { expiresIn: 86400 });
+    const token = jwt.sign({ email: user.email }, config.secret, { expiresIn: 86400 });
     res.json({
       status: res.statusCode,
       token,
       message: 'Successfully logged in'
-    })
-  })
-});
+    });
+  });
+};
