@@ -19,6 +19,9 @@ const videoSchema = new Schema({
     unique: true,
     lowercase: true,
   },
+  price: {
+    type: String,
+  },
   genre: [{ type: Schema.Types.ObjectId, ref: 'Genre' }],
   director: [{ type: Schema.Types.ObjectId, ref: 'Director' }],
   borrowed_by: { type: Schema.Types.ObjectId, ref: 'User'},
