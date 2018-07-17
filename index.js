@@ -3,10 +3,12 @@ const mongoose = require('mongoose');
 const express = require('express');
 const bodyParser =require('body-parser');
 var morgan = require('morgan');
+const cors = require('cors')
 const app = express();
 
 const port = process.env.PORT || 5000;
 
+app.use(cors());
 // log requests to the console
 app.use(morgan('dev'));
 
