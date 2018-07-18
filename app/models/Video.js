@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const videoSchema = new Schema({
   createdAt: { type: Date, default: Date.now() },
-  modifiedAt: Date,
+  modifiedAt: { type: Date, default: Date.now() },
   name: { 
     type: String,
     required: true,
@@ -19,6 +19,9 @@ const videoSchema = new Schema({
     unique: true,
     lowercase: true,
   },
+  genre: [{ type: Schema.Types.ObjectId, ref: 'Genre' }],
+  director: { type: Schema.Types.ObjectId, ref: 'Director' },
+  borrowed_by: [{ type: Schema.Types.ObjectId, ref: 'User'}],
 });
 
-module.exports = mongoose.model('Videos', videoSchema);
+module.exports = mongoose.model('Video', videoSchema);

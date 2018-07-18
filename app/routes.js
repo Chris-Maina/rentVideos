@@ -1,4 +1,3 @@
-const Video = require('./models/models');
 const router = require('express').Router();
 
 // controllers

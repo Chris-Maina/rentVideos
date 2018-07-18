@@ -1,4 +1,4 @@
-const Video = require('../models/models');
+const Video = require('../models/Video');
 
 createSlug = str => (str.split(' ').join('-').toLowerCase());
 
