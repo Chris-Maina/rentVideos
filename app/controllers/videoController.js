@@ -1,6 +1,7 @@
 const Video = require('../models/Video');
 const Genre = require('../models/Genre');
 const Director = require('../models/Director');
+const mongoose = require('mongoose');
 
 createSlug = str => (str.split(' ').join('-').toLowerCase());
 
@@ -30,23 +31,43 @@ exports.getVideo = async (req, res) => {
   return res.status(200).json({ status: res.statusCode, data: video });
 }
 
-exports.createVideo = async (req, res) => {
-  const { name, description, genre, director, price } = req.body;
+const getGenreIDs = (req, res) => {
+  const { genre } = req.body;
+  const data = genre.map(async name => {
+    try {
+      const genre = await Genre.create({ name });
+      if (!genre) return res.status(400).json({ status: 'failure', message: 'Genre(s) name required' });
+      return mongoose.Types.ObjectId(genre._id);
+    } catch (error) {
+      return res.status(400).json({ status: 'failure', message: 'There was an error creating genre(s) for this video' });
+    }
+  });
+  return Promise.all(data)
+}
 
-  const genreIDs = genre.map(async name => {
-    const item = await Genre.create({ name, });
-    if (!item) return res.status(400).json({ status: 'failure', message: 'Genre name(s) required'});
-    return item._id;
+const getDirectorIDs = (req, res) => {
+  const { director } = req.body;
+  const data = director.map(async fullName => {
+    try {
+      const director = await Director.create({ fullName });
+      if (!director) return res.status(400).json({ status: 'failure', message: 'Director(s) full name required' });
+      return mongoose.Types.ObjectId(director._id);
+    } catch (error) {
+      return res.status(400).json({ status: 'failure', message: 'There was an error creating director(s) for this video' });
+    }
   });
-  const directorIDs = director.map(async fullName => {
-    const item = await Director.create({ fullName, });
-    console.log('director>>', item._id);
-    if (!item) return res.status(400).json({ status: 'failure', message: 'Director(s) full name required'});
-    return item._id;
-  });
-  console.log('fullname>>', directorIDs);
+  return Promise.all(data)
+}
+
+exports.createVideo = async (req, res) => {
+
+  const { name, description, price } = req.body;
   const slug = createSlug(name);
   try {
+    // generating references for Genres and Directors using ids
+    const genreIDs = await getGenreIDs(req, res);
+    const directorIDs = await getDirectorIDs(req, res);
+
     const video = await Video.create({
       name,
       description,
@@ -55,7 +76,7 @@ exports.createVideo = async (req, res) => {
       director: directorIDs,
       price,
     });
-    if (!video) return res.status(400).json({ status: 'failure', message: 'There was an erro encountered while creating your video' });
+    if (!video) return res.status(400).json({ status: 'failure', message: 'There was an error encountered while creating your video' });
     return res.status(201).json({ status: 'success', data: video });
   } catch (error) {
     return res.status(400).json({ status: 'failure', message: 'There was an error encountered while creating your video' });
