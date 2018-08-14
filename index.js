@@ -2,7 +2,7 @@ if (process.env.NODE_ENV !== 'production') require('dotenv').load();
 const mongoose = require('mongoose'); 
 const express = require('express');
 const bodyParser =require('body-parser');
-var morgan = require('morgan');
+const morgan = require('morgan');
 const cors = require('cors')
 const app = express();
 

@@ -1,7 +1,6 @@
 const Video = require('../models/Video');
 const Genre = require('../models/Genre');
 const Director = require('../models/Director');
-const helper = require('../helpers/generateIdFromDocument');
 
 createSlug = str => (str.split(' ').join('-').toLowerCase());
 
@@ -11,7 +10,7 @@ exports.index = (req, res) => (
 
 exports.getVideos = async (req, res) => {
   try {
-    const videos = await Video.find({});
+    const videos = await Video.find({}).populate('genre', 'name').populate('director', 'fullName');
     if (!videos) res.status(404).json({
       status: 'failure',
       message: 'There are no videos at this time.',
@@ -32,20 +31,13 @@ exports.getVideo = async (req, res) => {
 }
 
 exports.createVideo = async (req, res) => {
-
-  const { name, description, genre, director, price } = req.body;
+  const { name, description, price } = req.body;
   const slug = createSlug(name);
   try {
-    // generating references for Genres and Directors using ids
-    const genreIDs = await helper.generateIdFromDocument(Genre, genre, 'name', res);
-    const directorIDs = await helper.generateIdFromDocument(Director, director, 'fullName', res);
-
     const video = await Video.create({
       name,
       description,
       slug,
-      genre: genreIDs,
-      director: directorIDs,
       price,
     });
     if (!video) return res.status(400).json({ status: 'failure', message: 'Video was not created' });
@@ -70,3 +62,60 @@ exports.deleteVideo = async (req, res) => {
   if (!video) return res.status(400).json({ status: 'failure', message: 'There was an error deleting your video' })
   return res.status(200).json({ status: 'success', data: video, message: `Successfully deleted ${video.name}` });
 };
+
+exports.createVideoGenre = async (req, res) => {
+  const { name } = req.body;
+  const { slug } = req.params;
+  try {
+    /**
+     * Search for video
+     * If does not exist, display error message. Else
+     * Search for genre,
+     * If it does not exist, create the genre
+     * Check if video contains the genre
+     * If it does not, push it into array of video genre
+     * 
+     */
+    let genre = await Genre.findOne({ name, });
+    if (!genre) {
+      // create genre
+      genre = new Genre({ name });
+      // save the genre
+      await genre.save();
+    }
+    let video = await Video.find({ slug, genre });
+    if (!video.length) {
+      video = await Video.findOne({ slug });
+      // add genre to the array
+      video.genre.push(genre);
+      await video.save();
+      return res.status(201).json({ status: 'success', data: genre });
+    }
+    return res.status(200).json({ status: 'success', message: `${genre.name} already exists in the video.` });
+  } catch (error) {
+    return res.status(500).json({ status: 'failure', message: `There was an error populating genres for the video` });
+  }
+};
+
+exports.createVideoDirector = async (req, res) => {
+  const { fullName } = req.body;
+  const { slug } = req.params;
+  try {
+    let director = await Director.findOne({ fullName, });
+    if (!director) {
+      director = new Director({ fullName });
+      await director.save();
+    }
+    let video = await Video.find({ slug, director });
+    if (!video.length) {
+      video = await Video.findOne({ slug });
+      video.director.push(director);
+      await video.save();
+      return res.status(201).json({ status: 'success', data: director });
+    }
+    return res.status(200).json({ status: 'success', message: `${director.fullName} already exists in the video.` });
+  } catch (error) {
+    return res.status(500).json({ status: 'failure', message: `There was an error populating genres for the video ${video.name}` })
+  }
+};
+
