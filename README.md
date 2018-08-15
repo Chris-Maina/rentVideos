@@ -19,9 +19,16 @@ Clone this repository
 
 #### Endpoints
 
-| Resource URI                     |   Methods     |  Description                                                         |
-|----------------------------------|---------------|----------------------------------------------------------------------|                                      |
-|           /<resource>            |   GET         |  Lists all videos, video instances, genres or director               |
-|          /<resource>/create      |   POST        |  Creates a new video, video instance, genre or director              |
-|          /<resource>/<id>/update |   PATCH/PUT   |  Updates a specific video, video instance, genre or director         |
-|          /<resource>/<id>/delete |   DELETE      |  Deletes a specific video, video instance, genre or director         |
+| Resource URI                     |   Methods      |  Description                                                         |
+|----------------------------------|----------------|----------------------------------------------------------------------|   
+|   /user/register                 | POST           | Registers a new user                                                 |
+|   /user/login                    |POST           |   Used to login an existing user                                      |
+|   /videos                        |GET/POST       |   Lists all videos, creates a video                                   |
+|   /videos/:slug                  | GET/PUT/DELETE | Lists, updates or deletes a specific video                           |
+|   /videos/:slug/genres           | POST           |  Adds a genre to a specific video                                    |
+|   /videos/:slug/directors        | POST           |  Adds a director to a specific video                                 |
+|   /genres                        |GET/POST       |   Lists all genres, creates a genre                                   |
+|   /genres/:id                    |GET/PUT/DELETE |  Lists, updates or deletes a specific genre                           |
+|   /directors                     |GET/POST       |   Lists all directors, creates a director                             |
+|   /directors/:id                 | GET/PUT/DELETE |Lists, updates or deletes a specific director                         |
+
