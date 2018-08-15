@@ -16,3 +16,12 @@ Clone this repository
 
 #### Running the application
         npm start
+
+#### Endpoints
+
+| Resource URI                     |   Methods     |  Description                                                         |
+|----------------------------------|---------------|----------------------------------------------------------------------|                                      |
+|           /<resource>            |   GET         |  Lists all videos, video instances, genres or director               |
+|          /<resource>/create      |   POST        |  Creates a new video, video instance, genre or director              |
+|          /<resource>/<id>/update |   PATCH/PUT   |  Updates a specific video, video instance, genre or director         |
+|          /<resource>/<id>/delete |   DELETE      |  Deletes a specific video, video instance, genre or director         |
