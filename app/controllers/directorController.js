@@ -54,17 +54,13 @@ exports.deleteDirector = async (req, res) => {
 
 exports.getDirector = async (req, res) => {
   try {
-    const directorVideos = await async.parallel({
-      director: Director.find({ id: req.params.id }),
-      videos: Video.find({ director: req.params.id}).populate('director')
-    });
-
-    if (!directorVideos) res.status(404).json({
+    const director = await Director.findById(req.params.id)
+    if (!director) res.status(404).json({
       status: 'failure',
-      message: 'There are no vides for the director specified.',
+      message: 'Director not found.',
     })
-    return res.status(200).json({ status: 'success', data: directorVideos });
+    return res.status(200).json({ status: 'success', data: director });
   } catch (error) {
-    return res.status(400).json({ status: 'failure', message: 'There was a problem fetching videos for that director' })
+    return res.status(400).json({ status: 'failure', message: 'There was a problem fetching details of that director' })
   }
 }
