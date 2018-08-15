@@ -35,7 +35,7 @@ exports.createGenre = async (req, res) => {
 exports.updateGenre = async (req, res) => {
   try {
     const genre = await Genre.findOneAndUpdate({ id: req.params.id }, req.body);
-    if (!genre) return res.status(404).json({ status: 'failure', message: 'Could not find a genre.' });
+    if (!genre) return res.status(404).json({ status: 'failure', message: 'Genre not found.' });
     return res.status(200).json({ status: 'success', data: genre, message: `Successfully edited genre` });
   } catch (error) {
     return res.status(400).json({ status: 'failure', message: 'There was an error updating your genre. Try again later' });
@@ -54,17 +54,13 @@ exports.deleteGenre = async (req, res) => {
 
 exports.getGenre = async (req, res) => {
   try {
-    const genreVideos = await async.parallel({
-      genre: Genre.find({ id: req.params.id }),
-      videos: Video.find({ genre: req.params.id}).populate('genre')
-    });
-
-    if (!genreVideos) res.status(404).json({
+    const genre = await Genre.findById(req.params.id);
+    if (!genre) res.status(404).json({
       status: 'failure',
-      message: 'There are no vides for the genre specified.',
+      message: 'Genre not found.',
     })
-    return res.status(200).json({ status: 'success', data: genreVideos });
+    return res.status(200).json({ status: 'success', data: genre });
   } catch (error) {
-    return res.status(400).json({ status: 'failure', message: 'There was a problem fetching videos for that genre' })
+    return res.status(400).json({ status: 'failure', message: 'There was a problem fetching that genre' })
   }
 }

@@ -63,6 +63,13 @@ exports.deleteVideo = async (req, res) => {
   return res.status(200).json({ status: 'success', data: video, message: `Successfully deleted ${video.name}` });
 };
 
+exports.getVideoGenre = async (req, res, next) => {
+  const { slug } = req.params;
+  const video = await Video.findOne({ slug }).populate('genre');
+  if(!video) return next(video);
+  return res.status(200).json({ status: 'success', data: video.genre })
+}
+
 exports.createVideoGenre = async (req, res) => {
   const { name } = req.body;
   const { slug } = req.params;
@@ -78,9 +85,8 @@ exports.createVideoGenre = async (req, res) => {
      */
     let genre = await Genre.findOne({ name, });
     if (!genre) {
-      // create genre
+      // create and save genre
       genre = new Genre({ name });
-      // save the genre
       await genre.save();
     }
     let video = await Video.find({ slug, genre });
@@ -96,6 +102,13 @@ exports.createVideoGenre = async (req, res) => {
     return res.status(500).json({ status: 'failure', message: `There was an error populating genres for the video` });
   }
 };
+
+exports.getVideoDirector = async (req, res, next) => {
+  const { slug } = req.params;
+  const video = await Video.findOne({ slug }).populate('director');
+  if(!video) return next(video);
+  return res.status(200).json({ status: 'success', data: video.director })
+}
 
 exports.createVideoDirector = async (req, res) => {
   const { fullName } = req.body;
