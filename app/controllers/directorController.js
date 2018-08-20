@@ -37,7 +37,7 @@ exports.updateDirector = async (req, res, next) => {
   try {
     const director = await Director.findOneAndUpdate({ slug, }, req.body);
     if (!director) return res.status(404).json({ status: 'failure', message: 'Could not find director. Please check the URL you are referencing.' });
-    return res.status(200).json({ status: 'success', data: director, message: `Successfully edited director` });
+    return res.status(200).json({ status: 'success', message: `Successfully edited director` });
   } catch (error) {
     next(error);
   }

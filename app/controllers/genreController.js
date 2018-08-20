@@ -38,7 +38,7 @@ exports.updateGenre = async (req, res, next) => {
   try {
     const genre = await Genre.findOneAndUpdate({ slug }, req.body);
     if (!genre) return res.status(404).json({ status: 'failure', message: 'Could not find your genre. Please check the URL you are referencing.' });
-    return res.status(200).json({ status: 'success', data: genre, message: `Successfully edited genre` });
+    return res.status(200).json({ status: 'success', message: `Successfully edited genre` });
   } catch (error) {
     next(error);
   }

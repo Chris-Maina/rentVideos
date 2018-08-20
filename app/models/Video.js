@@ -24,7 +24,6 @@ const videoSchema = new Schema({
   },
   genre: [{ type: Schema.Types.ObjectId, ref: 'Genre' }],
   director: [{ type: Schema.Types.ObjectId, ref: 'Director' }],
-  borrowed_by: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 
 module.exports = mongoose.model('Video', videoSchema);

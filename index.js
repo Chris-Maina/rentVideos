@@ -31,10 +31,12 @@ const userRoutes = require('./app/routes/userRoutes');
 const videoRoutes = require('./app/routes/videoRoutes');
 const genreRoutes = require('./app/routes/genreRoutes');
 const directorRoutes = require('./app/routes/directorRoutes');
+const videoInstacesRoutes = require('./app/routes/videoInstanceRoutes');
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/videos', videoRoutes);
 app.use('/api/v1/genres', genreRoutes);
 app.use('/api/v1/directors', directorRoutes);
+app.use('/api/v1/videoinstances', videoInstacesRoutes);
 
 /**
  * Catch 404 errors and forward them to error handler

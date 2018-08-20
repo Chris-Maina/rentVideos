@@ -10,9 +10,11 @@ const videoInstanceSchema = new Schema({
   status: {
     type: String ,
     required: true ,
-    enum: ['Available', 'Rented']
+    enum: ['available', 'rented'],
+    default: 'available'
   },
-  due_back: { type: Date },
+  due_back: { type: Date, default: Date.now() },
+  rented_by: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 
 module.exports = mongoose.model('VideoInstance', videoInstanceSchema);
