@@ -1,38 +1,38 @@
 const Video = require('../models/Video');
 const Genre = require('../models/Genre');
 const Director = require('../models/Director');
+const { slugify } = require('../helpers/generateSlug');
 
-createSlug = str => (str.split(' ').join('-').toLowerCase());
-
-exports.index = (req, res) => (
-  res.json({ message: 'Welcome to RentVideos, get entertained!' })
-);
-
-exports.getVideos = async (req, res) => {
+exports.getVideos = async (req, res, next) => {
   try {
     const videos = await Video.find({}).populate('genre', 'name').populate('director', 'fullName');
-    if (!videos) res.status(404).json({
+    if (!videos.length) res.status(404).json({
       status: 'failure',
       message: 'There are no videos at this time.',
-    })
+    });
     return res.status(200).json({ status: 'success', data: videos });
   } catch (error) {
-    return res.status(400).json({ status: 'failure', message: 'There was a problem fetching videos' })
+    next(error);
   }
 };
 
-exports.getVideo = async (req, res) => {
-  const video = await Video.findOne({ slug: req.params.slug });
-  if (!video) return res.status(404).json({
-    status: 'failure',
-    message: 'Video not found',
-  })
-  return res.status(200).json({ status: res.statusCode, data: video });
+exports.getVideo = async (req, res, next) => {
+  const { slug } = req.value;
+  try {
+    const video = await Video.findOne({ slug });
+    if (!video) return res.status(404).json({
+      status: 'failure',
+      message: 'Video not found',
+    });
+    return res.status(200).json({ status: res.statusCode, data: video });
+  } catch (error) {
+    next(error);
+  }
 }
 
-exports.createVideo = async (req, res) => {
+exports.createVideo = async (req, res, next) => {
   const { name, description, price } = req.body;
-  const slug = createSlug(name);
+  const slug = slugify(name);
   try {
     const video = await Video.create({
       name,
@@ -40,34 +40,42 @@ exports.createVideo = async (req, res) => {
       slug,
       price,
     });
-    if (!video) return res.status(400).json({ status: 'failure', message: 'Video was not created' });
+    if (!video) return res.status(404).json({ status: 'failure', message: 'Video was not created. Please try again.' });
     return res.status(201).json({ status: 'success', data: video });
   } catch (error) {
-    return res.status(400).json({ status: 'failure', message: 'There was an error encountered while creating your video' });
+    next(error);
   }
 }
 
-exports.updateVideo = async (req, res) => {
+exports.updateVideo = async (req, res, next) => {
   try {
     const video = await Video.findOneAndUpdate({ slug: req.params.slug }, req.body);
-    if (!video) return res.status(404).json({ status: 'failure', message: 'Could not find a video.' });
+    if (!video) return res.status(404).json({ status: 'failure', message: 'Could not find your video. Please check the url you are referencing.' });
     return res.status(200).json({ status: 'success', data: video, message: `Successfully edited video` });
   } catch (error) {
-    return res.status(400).json({ status: 'failure', message: 'There was an error updating your video. Try again later' });
+    next(error);
   }
 };
 
-exports.deleteVideo = async (req, res) => {
-  const video = await Video.findOneAndRemove({ slug: req.params.slug });
-  if (!video) return res.status(400).json({ status: 'failure', message: 'There was an error deleting your video' })
-  return res.status(200).json({ status: 'success', data: video, message: `Successfully deleted ${video.name}` });
+exports.deleteVideo = async (req, res, next) => {
+  try {
+    const video = await Video.findOneAndRemove({ slug: req.params.slug });
+    if (!video) return res.status(404).json({ status: 'failure', message: 'Could not find your video. Please check the url you are referencing.' })
+    return res.status(200).json({ status: 'success', message: `Successfully deleted ${video.name}` });
+  } catch (error) {
+    next(error);
+  }
 };
 
 exports.getVideoGenre = async (req, res, next) => {
   const { slug } = req.params;
-  const video = await Video.findOne({ slug }).populate('genre');
-  if(!video) return next(video);
-  return res.status(200).json({ status: 'success', data: video.genre })
+  try {
+    const video = await Video.findOne({ slug }).populate('genre');
+    if (!video) return res.status(404).json({ status: 'failure', message: 'Could not find your video. Please check the url you are referencing.' });
+    return res.status(200).json({ status: 'success', data: video.genre });
+  } catch (error) {
+    next(error);
+  }
 }
 
 exports.createVideoGenre = async (req, res) => {
@@ -87,6 +95,7 @@ exports.createVideoGenre = async (req, res) => {
     if (!genre) {
       // create and save genre
       genre = new Genre({ name });
+      genre.slug = slugify(name);
       await genre.save();
     }
     let video = await Video.find({ slug, genre });
@@ -99,24 +108,29 @@ exports.createVideoGenre = async (req, res) => {
     }
     return res.status(200).json({ status: 'success', message: `${genre.name} already exists in the video.` });
   } catch (error) {
-    return res.status(500).json({ status: 'failure', message: `There was an error populating genres for the video` });
+    next(error);
   }
 };
 
 exports.getVideoDirector = async (req, res, next) => {
   const { slug } = req.params;
-  const video = await Video.findOne({ slug }).populate('director');
-  if(!video) return next(video);
-  return res.status(200).json({ status: 'success', data: video.director })
+  try {
+    const video = await Video.findOne({ slug }).populate('director');
+    if (!video) return res.status(404).json({ status: 'failure', message: 'Could not find your video. Please check the url you are referencing.' });
+    return res.status(200).json({ status: 'success', data: video.director });
+  } catch (error) {
+    next(error);
+  }
 }
 
-exports.createVideoDirector = async (req, res) => {
+exports.createVideoDirector = async (req, res, next) => {
   const { fullName } = req.body;
   const { slug } = req.params;
   try {
     let director = await Director.findOne({ fullName, });
     if (!director) {
       director = new Director({ fullName });
+      director.slug = slugify(fullName);
       await director.save();
     }
     let video = await Video.find({ slug, director });
@@ -128,7 +142,7 @@ exports.createVideoDirector = async (req, res) => {
     }
     return res.status(200).json({ status: 'success', message: `${director.fullName} already exists in the video.` });
   } catch (error) {
-    return res.status(500).json({ status: 'failure', message: `There was an error populating genres for the video ${video.name}` })
+    next(error);
   }
 };
 

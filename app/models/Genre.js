@@ -7,6 +7,10 @@ const genreSchema = new Schema({
     required: true,
     unique: true
   },
+  slug: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model('Genre', genreSchema);

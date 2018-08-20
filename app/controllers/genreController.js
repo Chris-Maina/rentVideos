@@ -1,5 +1,6 @@
 const Genre = require('../models/Genre');
-const Video = require('../models/Video');
+const { slugify } = require('../helpers/generateSlug');
+
 /**
  * get all genres
  * create a genre
@@ -8,59 +9,62 @@ const Video = require('../models/Video');
  * get videos for a particular genre
  */
 
-exports.getGenres = async (req, res) => {
+exports.getGenres = async (req, res, next) => {
   try {
     const genres = await Genre.find({});
-    if (!genres) res.status(404).json({
+    if (!genres.length) return res.status(404).json({
       status: 'failure',
       message: 'There are no genres at this time.',
-    })
+    });
     return res.status(200).json({ status: 'success', data: genres });
   } catch (error) {
-    return res.status(400).json({ status: 'failure', message: 'There was a problem fetching genres' })
+    next(error);
   }
 }
 
-exports.createGenre = async (req, res) => {
+exports.createGenre = async (req, res, next) => {
   const { name } = req.body;
   try {
-    const genre = await Genre.create({ name, });
-    if (!genre) return res.status(400).json({ status: 'failure', message: 'Genre name is required'});
+    const slug = slugify(name);
+    const genre = await Genre.create({ name, slug });
     return res.status(201).json({ status: 'success', data: genre });
   } catch (error) {
-    return res.status(400).json({ status: 'failure', message: 'There was an error encountered while creating your genre' });
+    next(error);
   }
 }
 
-exports.updateGenre = async (req, res) => {
+exports.updateGenre = async (req, res, next) => {
+  const { slug } = req.value;
   try {
-    const genre = await Genre.findOneAndUpdate({ id: req.params.id }, req.body);
-    if (!genre) return res.status(404).json({ status: 'failure', message: 'Genre not found.' });
+    const genre = await Genre.findOneAndUpdate({ slug }, req.body);
+    if (!genre) return res.status(404).json({ status: 'failure', message: 'Could not find your genre. Please check the URL you are referencing.' });
     return res.status(200).json({ status: 'success', data: genre, message: `Successfully edited genre` });
   } catch (error) {
-    return res.status(400).json({ status: 'failure', message: 'There was an error updating your genre. Try again later' });
+    next(error);
   }
 };
 
-exports.deleteGenre = async (req, res) => {
+exports.deleteGenre = async (req, res, next) => {
+  const { slug } = req.value;
   try {
-    const genre = await Genre.findOneAndRemove({ _id: req.params.id });
-    if (!genre) return res.status(404).json({ status: 'failure', message: 'Could not find the genre.' })
+    const genre = await Genre.findOneAndRemove({ slug });
+    if (!genre) return res.status(404).json({ status: 'failure', message: 'Could not find your genre. Please check the URL you are referencing.' })
     return res.status(200).json({ status: 'success', data: genre, message: `Successfully deleted ${genre.name}` });
   } catch (error) {
-    return res.status(400).json({ status: 'failure', message: 'There was an error deleting your genre. Try again later' });
+    next(error);
   }
 };
 
-exports.getGenre = async (req, res) => {
+exports.getGenre = async (req, res, next) => {
+  const { slug } = req.value;
   try {
-    const genre = await Genre.findById(req.params.id);
-    if (!genre) res.status(404).json({
+    const genre = await Genre.findOne({ slug });
+    if (!genre) return res.status(404).json({
       status: 'failure',
       message: 'Genre not found.',
     })
     return res.status(200).json({ status: 'success', data: genre });
   } catch (error) {
-    return res.status(400).json({ status: 'failure', message: 'There was a problem fetching that genre' })
+    next(error);
   }
 }

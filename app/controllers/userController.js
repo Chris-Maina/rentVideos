@@ -4,15 +4,20 @@ const User = require('./../models/User');
 const config = require('../../config/config');
 
 exports.userExists = async (req, res, next) => {
-  const user = await User.findOne({ email: req.body.email });
-  if (!user) return next();
-  return res.status(409).json({
-    status: 'failure',
-    message: `${user.username} already exists. Use another name`
-  });
+  const{ email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return next();
+    return res.status(409).json({
+      status: 'failure',
+      message: `${user.email} already exists. Use another email address.`
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.registerUser = async (req, res) => {
+exports.registerUser = async (req, res, next) => {
   const { username, email, password } = req.body;
   /**
    * hash password
@@ -28,19 +33,19 @@ exports.registerUser = async (req, res) => {
     res.status(201).json({ status: 'success', message: `${user.username} is successfully registered` })
 
   } catch (err) {
-    res.status(400).json({ status: 'failure', message: 'There seems to be an error registering you. Please try again later.' })
+    next(err);
   }
 };
 
-exports.loginUser = async (req, res) => {
-  const { username, password } = req.body;
+exports.loginUser = async (req, res, next) => {
+  const { email, password } = req.body;
   /**
    * find user with the username
    * generate token with the username
    * return token
    */
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
     if (!user) return res.status(404).json({
       status: 'failure',
       message: 'The user does not seem to exist'
@@ -60,6 +65,6 @@ exports.loginUser = async (req, res) => {
     });
 
   } catch (err) {
-    res.status(400).json({ status: 'failure', message: 'There seems to be a probrem logging in. Please try again later.' });
+    next(err);
   }
 };

@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { validateSlug, schemas } = require('../helpers/routeHelpers');
 
 // controllers
 const verifyToken = require('../controllers/verifyToken');
@@ -9,17 +10,17 @@ router.route('/')
     .post(verifyToken, videoController.createVideo);
 
 router.route('/:slug')
-    .get(verifyToken, videoController.getVideo)
-    .patch(verifyToken, videoController.updateVideo)
-    .delete(verifyToken, videoController.deleteVideo);
+    .get(verifyToken, validateSlug(schemas.slugSchema), videoController.getVideo)
+    .patch(verifyToken, validateSlug(schemas.slugSchema), videoController.updateVideo)
+    .delete(verifyToken, validateSlug(schemas.slugSchema), videoController.deleteVideo);
 
 router.route('/:slug/genres')
-    .get(verifyToken, videoController.getVideoGenre)
-    .post(verifyToken, videoController.createVideoGenre);
+    .get(verifyToken,validateSlug(schemas.slugSchema), videoController.getVideoGenre)
+    .post(verifyToken, validateSlug(schemas.slugSchema), videoController.createVideoGenre);
 
 router.route('/:slug/directors')
-    .get(verifyToken, videoController.getVideoDirector)
-    .post(verifyToken, videoController.createVideoDirector);
+    .get(verifyToken, validateSlug(schemas.slugSchema), videoController.getVideoDirector)
+    .post(verifyToken, validateSlug(schemas.slugSchema), videoController.createVideoDirector);
 
 
 module.exports = router;

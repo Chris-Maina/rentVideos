@@ -1,7 +1,7 @@
 if (process.env.NODE_ENV !== 'production') require('dotenv').load();
-const mongoose = require('mongoose'); 
+const mongoose = require('mongoose');
 const express = require('express');
-const bodyParser =require('body-parser');
+const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors')
 const app = express();
@@ -40,14 +40,14 @@ app.use('/api/v1/directors', directorRoutes);
  * Catch 404 errors and forward them to error handler
  */
 app.use((req, res, next) => {
-    const error = new Error('Resource not found');
-    error.status = 404;
+    const error = new Error('There was a problem completing your request. Try again later');
+    error.status = 400;
     next(error);
 });
 
- /**
-  * Error handler
-  */
+/**
+ * Error handler
+ */
 app.use((err, req, res, next) => {
     let error = process.env.NODE_ENV === 'development' ? err : {};
     const status = error.status || 500;

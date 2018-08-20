@@ -1,5 +1,5 @@
 const Director = require('../models/Director');
-const Video = require('../models/Video');
+const { slugify } = require('../helpers/generateSlug');
 /**
  * get all directors
  * create a director
@@ -8,59 +8,62 @@ const Video = require('../models/Video');
  * get videos for a particular director
  */
 
-exports.getDirectors = async (req, res) => {
+exports.getDirectors = async (req, res, next) => {
   try {
     const directors = await Director.find({});
-    if (!directors) res.status(404).json({
+    if (!directors.length) return res.status(404).json({
       status: 'failure',
       message: 'There are no directors at this time.',
     })
     return res.status(200).json({ status: 'success', data: directors });
   } catch (error) {
-    return res.status(400).json({ status: 'failure', message: 'There was a problem fetching directors' })
+    next(error);
   }
 }
 
-exports.createDirector = async (req, res) => {
+exports.createDirector = async (req, res, next) => {
   const { fullName } = req.body;
   try {
-    const director = await Director.create({ fullName,});
-    if (!director) return res.status(400).json({ status: 'failure', message: 'Director full name is required'});
+    const slug = slugify(fullName);
+    const director = await Director.create({ fullName, slug });
     return res.status(201).json({ status: 'success', data: director });
   } catch (error) {
-    return res.status(400).json({ status: 'failure', message: 'There was an error encountered while creating a director' });
+   next(error);
   }
 }
 
-exports.updateDirector = async (req, res) => {
+exports.updateDirector = async (req, res, next) => {
+  const { slug } = req.value;
   try {
-    const director = await Director.findOneAndUpdate({ id: req.params.id }, req.body);
-    if (!director) return res.status(404).json({ status: 'failure', message: 'Could not find director.' });
+    const director = await Director.findOneAndUpdate({ slug, }, req.body);
+    if (!director) return res.status(404).json({ status: 'failure', message: 'Could not find director. Please check the URL you are referencing.' });
     return res.status(200).json({ status: 'success', data: director, message: `Successfully edited director` });
   } catch (error) {
-    return res.status(400).json({ status: 'failure', message: 'There was an error updating your director. Try again later' });
+    next(error);
   }
 };
 
-exports.deleteDirector = async (req, res) => {
+exports.deleteDirector = async (req, res, next) => {
+  const { slug } = req.value;
   try {
-    const director = await Director.findOneAndRemove({ _id: req.params.id });
-    if (!director) return res.status(404).json({ status: 'failure', message: 'Could not find the director.' })
-    return res.status(200).json({ status: 'success', data: director, message: `Successfully deleted ${director.firstName}` });
+    const director = await Director.findOneAndRemove({ slug, });
+    if (!director) return res.status(404).json({ status: 'failure', message: 'Could not find director. Please check the URL you are referencing.' })
+    return res.status(200).json({ status: 'success', data: director, message: `Successfully deleted ${director.fullName}` });
   } catch (error) {
-    return res.status(400).json({ status: 'failure', message: 'There was an error deleting your director. Try again later' });
+    next(error);
   }
 };
 
-exports.getDirector = async (req, res) => {
+exports.getDirector = async (req, res, next) => {
+  const { slug } = req.value;
   try {
-    const director = await Director.findById(req.params.id)
-    if (!director) res.status(404).json({
+    const director = await Director.findOne({ slug });
+    if (!director) return res.status(404).json({
       status: 'failure',
       message: 'Director not found.',
     })
     return res.status(200).json({ status: 'success', data: director });
   } catch (error) {
-    return res.status(400).json({ status: 'failure', message: 'There was a problem fetching details of that director' })
+    next(error);
   }
 }

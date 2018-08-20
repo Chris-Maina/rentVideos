@@ -6,6 +6,10 @@ const directorSchema = new Schema({
     type: String,
     required: true
   },
+  slug: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model('Director', directorSchema);
