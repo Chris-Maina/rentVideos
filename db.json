@@ -26,7 +26,6 @@
           ],
           "id": "5b78685d3b857874dbea3cc7",
           "name": "Rampage",
-          "slug": "rampage",
           "price": "Ksh 100"
       },
       {
@@ -47,7 +46,6 @@
           ],
           "id": "5b79be95b1a546a1ee0e84af",
           "name": "Life of the Party",
-          "slug": "life-of-the-party",
           "price": "60"
       }
   ]

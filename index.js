@@ -2,8 +2,8 @@ if (process.env.NODE_ENV !== 'production') require('dotenv').load();
 const express = require('express');
 const Joi = require('joi');
 const app = express();
-const { buildSchema } = require('graphql');
 const graphqlHTTP = require('express-graphql');
+const schema = require('./app/schema/schema');
 
 app.use(express.json());
 
@@ -130,7 +130,7 @@ const root = {
 };
 
 app.use('/graphql', graphqlHTTP({
-  schema: schema,
+  schema,
   rootValue: root,
   graphiql: true,
 }));
