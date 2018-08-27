@@ -39,6 +39,15 @@
       "id": "5b7dbeca5cde36175e320c25",
       "name": "Deadpool 2",
       "price": "Ksh 150"
+    },
+    {
+      "price": "ksh 100",
+      "name": "Tag",
+      "description": "A small group of former classmates organize an elaborate, annual game of tag that requires some to travel all over the country.",
+      "genre": "5b79bff57456efa3c58f728e",
+      "id": "~Eehnyh",
+      "genreId": "5b79bff57456efa3c58f728e",
+      "directorId": "sNajfIk"
     }
   ],
   "genres": [
@@ -83,6 +92,10 @@
     {
       "id": "5b7dbf165cde36175e320c28",
       "fullName": "David Leitch"
+    },
+    {
+      "fullName": "Jeff Tomsic",
+      "id": "sNajfIk"
     }
   ]
 }
