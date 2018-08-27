@@ -1,0 +1,101 @@
+{
+  "videos": [
+    {
+      "createdAt": "2018-08-18T18:37:37.222Z",
+      "modifiedAt": "2018-08-18T18:37:37.222Z",
+      "description": "When a genetic experiment goes awry, it unleashes super creatures that rampage the city. Scientist Davis races to secure an antidote to try to save the ape that was once his friend.",
+      "genreId": "5b786ccb3b857874dbea3cc8",
+      "directorId": "5b786def3b857874dbea3ccc",
+      "id": "5b78685d3b857874dbea3cc7",
+      "name": "Rampage",
+      "price": "Ksh 100"
+    },
+    {
+      "createdAt": "2018-08-19T18:41:58.094Z",
+      "modifiedAt": "2018-08-19T18:41:58.094Z",
+      "description": "When her husband dumps her, Deanna (Melissa McCarthy) goes back to college at the same school as her daughter. Embracing freedom, fun and frat boys, Deanna finds her true self.",
+      "genreId": "5b79bff57456efa3c58f728e",
+      "directorId": "5b79c0521f9431a3f9b39f13",
+      "id": "5b79be95b1a546a1ee0e84af",
+      "name": "Life of the Party",
+      "price": "60"
+    },
+    {
+      "createdAt": "2018-08-22T19:42:06.546Z",
+      "modifiedAt": "2018-08-22T19:42:06.546Z",
+      "description": "After failing to get into the police academy, Chris Potamitis (Liam Hemsworth), settles for a security guard job with the EMPIRE STATE Armored Truck Company, and is soon unwittingly drawn into an elaborate scheme to rob the abundant amounts of cash being stored there - resulting in the largest cash heist in U.S. History. As the stakes continue to rise, Chris and Eddie must outwit James Ransone (Dwayne \"The Rock\" Johnson), the veteran NYPD Detective that is hot on their trail.",
+      "genreId": "5b786ccb3b857874dbea3cc8",
+      "directorId": "5b7dbded5cde36175e320c23",
+      "id": "5b7dbd4f5cde36175e320c20",
+      "name": "Empire State",
+      "price": "Ksh 150"
+    },
+    {
+      "createdAt": "2018-08-22T19:42:06.546Z",
+      "modifiedAt": "2018-08-22T19:42:06.546Z",
+      "description": "After surviving a near fatal bovine attack, a disfigured cafeteria chef (Wade Wilson) struggles to fulfill his dream of becoming Miami's hottest bartender, while also learning to cope with his lost sense of taste. Searching to regain his spice for life, as well as a flux capacitor, Wade must battle ninjas, the yakuza, and a pack of sexually aggressive canines, as he journeys around the world to discover the importance of family, friendship, and flavor - finding a new taste for adventure and earning the coveted coffee mug title of World's Best Lover.",
+      "genreId": "5b7dbef05cde36175e320c27",
+      "directorId": "5b7dbf165cde36175e320c28",
+      "id": "5b7dbeca5cde36175e320c25",
+      "name": "Deadpool 2",
+      "price": "Ksh 150"
+    },
+    {
+      "price": "ksh 100",
+      "name": "Tag",
+      "description": "A small group of former classmates organize an elaborate, annual game of tag that requires some to travel all over the country.",
+      "genre": "5b79bff57456efa3c58f728e",
+      "id": "~Eehnyh",
+      "genreId": "5b79bff57456efa3c58f728e",
+      "directorId": "sNajfIk"
+    }
+  ],
+  "genres": [
+    {
+      "id": "5b786ccb3b857874dbea3cc8",
+      "name": "Action"
+    },
+    {
+      "id": "5b786cdf3b857874dbea3cca",
+      "name": "Sci-Fi"
+    },
+    {
+      "id": "5b786cf13b857874dbea3ccb",
+      "name": "Fantasy"
+    },
+    {
+      "id": "5b79bff57456efa3c58f728e",
+      "name": "Comedy"
+    },
+    {
+      "id": "5b7dbdac5cde36175e320c22",
+      "name": "Drama"
+    },
+    {
+      "id": "5b7dbef05cde36175e320c27",
+      "name": "Adventure"
+    }
+  ],
+  "directors": [
+    {
+      "id": "5b786def3b857874dbea3ccc",
+      "fullName": "Brad Peyton"
+    },
+    {
+      "id": "5b79c0521f9431a3f9b39f13",
+      "fullName": "Ben Falcone"
+    },
+    {
+      "id": "5b7dbded5cde36175e320c23",
+      "fullName": "Dito Montiel"
+    },
+    {
+      "id": "5b7dbf165cde36175e320c28",
+      "fullName": "David Leitch"
+    },
+    {
+      "fullName": "Jeff Tomsic",
+      "id": "sNajfIk"
+    }
+  ]
+}
